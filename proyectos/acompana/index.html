@@ -1,0 +1,778 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Never Alone on the Way Home — Acompaña</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ---------- Design tokens ---------- */
+  :root {
+    --pink: #f9cddd;
+    --pink-strong: #f4a9c4;
+    --black: #0b0b0b;
+    --white: #ffffff;
+    --gray: #e9e9eb;
+    --gray-text: #6b6b70;
+    --red: #e8302a;
+    /* narrative tense colors */
+    --t-past-simple: #e8302a;
+    --t-past-cont: #2f6fed;
+    --t-past-perf: #12a150;
+    --t-pres-perf: #b44ce0;
+    --radius: 22px;
+    --gutter: clamp(16px, 5vw, 72px);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: "Inter Tight", "Helvetica Neue", Arial, sans-serif;
+    background: var(--white);
+    color: var(--black);
+    line-height: 1.55;
+    overflow-x: hidden;
+  }
+  img { max-width: 100%; display: block; }
+  a { color: inherit; }
+
+  /* ---------- Shared layout ---------- */
+  section { position: relative; padding: clamp(72px, 10vw, 140px) var(--gutter); overflow: hidden; }
+  .wrap { max-width: 1180px; margin: 0 auto; position: relative; z-index: 2; }
+  .big {
+    font-weight: 800;
+    font-size: clamp(56px, 10vw, 136px);
+    line-height: .9;
+    letter-spacing: -.045em;
+  }
+  .lead { font-size: clamp(18px, 1.6vw, 22px); max-width: 34ch; margin-top: 24px; }
+  .body { font-size: 17px; max-width: 62ch; }
+  .body p + p { margin-top: 1em; }
+  .row { display: flex; justify-content: space-between; align-items: end; gap: 32px; flex-wrap: wrap; }
+  .pill {
+    display: inline-flex; align-items: center; gap: 10px;
+    border: 1.5px solid currentColor; border-radius: 999px;
+    padding: 10px 22px; font-size: 14px; font-weight: 500; text-decoration: none;
+    transition: background .2s, color .2s;
+  }
+  .pill:hover { background: var(--black); color: var(--white); border-color: var(--black); }
+  .dark .pill:hover { background: var(--white); color: var(--black); border-color: var(--white); }
+  .pill .arrow { width: 26px; height: 26px; border-radius: 50%; background: currentColor; display: grid; place-items: center; }
+  .pill .arrow::after { content: "→"; color: var(--pink); font-size: 13px; }
+  .eyebrow { font-size: 13px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; opacity: .7; margin-bottom: 18px; }
+  .placeholder { opacity: .55; font-style: italic; }
+
+  .pink { background: var(--pink); }
+  .dark { background: var(--black); color: var(--white); }
+  .dark .big.accent { color: var(--pink); }
+  .gray { background: var(--gray); }
+
+  /* Giant faded word behind a section */
+  .ghost {
+    position: absolute; z-index: 0; pointer-events: none;
+    font-weight: 800; letter-spacing: -.05em; line-height: .8;
+    font-size: clamp(120px, 24vw, 340px);
+    color: rgba(255,255,255,.75);
+    top: 40px; left: -2vw; white-space: nowrap;
+  }
+  .pink .ghost { color: rgba(255,255,255,.45); }
+  .dark .ghost { color: rgba(255,255,255,.05); }
+
+  /* ---------- Cut-out slots ----------
+     Drop transparent PNGs in /cutouts with the file name shown in each slot
+     and they appear automatically. Empty slots show a dashed guide. */
+  .cutout {
+    position: absolute; z-index: 1; pointer-events: none;
+  }
+  .cutout img { width: 100%; height: auto; filter: drop-shadow(0 30px 40px rgba(0,0,0,.18)); }
+  .cutout:empty {
+    border: 1.5px dashed rgba(0,0,0,.25); border-radius: 24px;
+    display: grid; place-items: center; aspect-ratio: 3 / 4;
+  }
+  .dark .cutout:empty { border-color: rgba(255,255,255,.25); }
+  .cutout:empty::after {
+    content: "cut-out\A" attr(data-file);
+    white-space: pre; text-align: center;
+    font-size: 12px; letter-spacing: .08em; opacity: .5;
+  }
+
+  /* Decorative iridescent glass shapes */
+  .glass {
+    position: absolute; z-index: 1; pointer-events: none;
+    border-radius: 34%;
+    background:
+      radial-gradient(circle at 28% 22%, rgba(255,255,255,.95), rgba(255,255,255,0) 32%),
+      radial-gradient(circle at 75% 80%, rgba(255,255,255,.35), rgba(255,255,255,0) 40%),
+      linear-gradient(135deg, rgba(255,140,200,.55), rgba(130,200,255,.45) 45%, rgba(255,225,140,.45));
+    box-shadow:
+      inset 0 0 0 1.5px rgba(255,255,255,.55),
+      inset 0 0 40px rgba(255,255,255,.45),
+      0 30px 60px rgba(0,0,0,.25);
+    backdrop-filter: blur(4px);
+    animation: float 9s ease-in-out infinite;
+  }
+  .glass.pill-shape { border-radius: 999px; }
+  .dark .glass {
+    background:
+      radial-gradient(circle at 28% 22%, rgba(255,255,255,.7), rgba(255,255,255,0) 30%),
+      linear-gradient(135deg, rgba(255,120,190,.35), rgba(20,20,20,.4) 45%, rgba(120,190,255,.35));
+    box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.35), inset 0 0 40px rgba(255,255,255,.12), 0 30px 60px rgba(0,0,0,.6);
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0) rotate(var(--r, 12deg)); }
+    50% { transform: translateY(-18px) rotate(calc(var(--r, 12deg) + 8deg)); }
+  }
+  @media (prefers-reduced-motion: reduce) { .glass { animation: none; } }
+
+  /* ---------- Nav ---------- */
+  nav {
+    position: sticky; top: 0; z-index: 50;
+    display: flex; justify-content: space-between; align-items: center; gap: 24px;
+    padding: 18px var(--gutter);
+    background: rgba(249,205,221,.85); backdrop-filter: blur(10px);
+  }
+  .logo { font-weight: 800; font-size: 20px; letter-spacing: -.03em; text-decoration: none; }
+  nav ul { display: flex; gap: 22px; list-style: none; font-size: 14px; }
+  nav ul a { text-decoration: none; }
+  nav ul a:hover { text-decoration: underline; text-underline-offset: 5px; }
+  @media (max-width: 900px) { nav ul { display: none; } }
+
+  /* ---------- Hero ---------- */
+  .hero { padding-top: 60px; min-height: 88vh; display: flex; align-items: center; }
+  .hero .big { font-size: clamp(44px, 7vw, 104px); max-width: 14ch; line-height: .95; }
+  .hero .meta { margin-top: 28px; font-size: 14px; opacity: .7; }
+
+  /* ---------- Marquee strip ---------- */
+  .strip { padding: 22px var(--gutter); text-align: center; font-size: clamp(15px, 1.4vw, 18px); border-bottom: 1px solid #eee; }
+
+  /* ---------- Story (narrative tenses) ---------- */
+  .story-text { font-size: clamp(19px, 1.7vw, 23px); line-height: 1.7; max-width: 60ch; margin-top: 48px; }
+  .ps { color: var(--t-past-simple); font-weight: 600; }
+  .pc { color: var(--t-past-cont); font-weight: 600; }
+  .pp { color: var(--t-past-perf); font-weight: 600; }
+  .prp { color: var(--t-pres-perf); font-weight: 600; }
+  .legend { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 40px; }
+  .legend span { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; border: 1px solid rgba(255,255,255,.2); border-radius: 999px; padding: 6px 14px; }
+  .legend i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+
+  /* ---------- Problem stats ---------- */
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin: 56px 0; max-width: 720px; }
+  .stat b { display: block; font-size: clamp(40px, 5vw, 64px); font-weight: 700; letter-spacing: -.04em; line-height: 1; }
+  .stat span { font-size: 14px; color: var(--gray-text); }
+  .two-col { display: grid; grid-template-columns: 1.1fr .9fr; gap: 56px; align-items: start; }
+  .media {
+    border-radius: var(--radius); overflow: hidden; background: #d9d9dc;
+    aspect-ratio: 4 / 5; display: grid; place-items: center; color: var(--gray-text); font-size: 13px; text-align: center;
+  }
+  .media img { width: 100%; height: 100%; object-fit: cover; }
+  figcaption { font-size: 13px; color: var(--gray-text); margin-top: 10px; }
+  @media (max-width: 860px) { .two-col { grid-template-columns: 1fr; } .stats { grid-template-columns: 1fr 1fr; } }
+
+  /* ---------- AI process accordion ---------- */
+  .acc { margin-top: 64px; border-top: 1px solid rgba(255,255,255,.25); }
+  .acc details { border-bottom: 1px solid rgba(255,255,255,.25); }
+  .acc summary {
+    list-style: none; cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    padding: 22px 0; font-size: clamp(18px, 1.8vw, 24px);
+  }
+  .acc summary::-webkit-details-marker { display: none; }
+  .acc summary small { opacity: .5; font-size: 14px; margin-right: 16px; }
+  .acc summary::after { content: "+"; font-size: 30px; font-weight: 300; transition: transform .25s; }
+  .acc details[open] summary::after { transform: rotate(45deg); }
+  .acc .content { padding: 0 0 32px; max-width: 70ch; color: rgba(255,255,255,.8); }
+  .acc .content p + p { margin-top: 1em; }
+  .prompt {
+    border: 1px solid rgba(255,255,255,.2); border-radius: 18px; padding: 20px 22px; margin-top: 16px;
+    font-size: 15px; background: rgba(255,255,255,.04);
+  }
+  .prompt b { display: block; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--pink); margin-bottom: 8px; }
+
+  /* ---------- Solution bento ---------- */
+  .bento { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 220px; gap: 14px; margin-top: 64px; }
+  .card {
+    position: relative; overflow: hidden;
+    border: 1px solid #d6d6d6; border-radius: var(--radius); padding: 22px;
+    display: flex; flex-direction: column; justify-content: flex-end;
+  }
+  .card .num { position: absolute; top: 18px; left: 18px; width: 30px; height: 30px; border-radius: 50%; border: 1px solid currentColor; display: grid; place-items: center; font-size: 12px; }
+  .card h3 { font-size: 15px; letter-spacing: .04em; text-transform: uppercase; margin-bottom: 6px; }
+  .card p { font-size: 14px; opacity: .75; max-width: 40ch; }
+  .card.wide { grid-column: span 2; }
+  .card.tall { grid-row: span 2; }
+  .card.inv { background: var(--black); color: var(--white); border-color: var(--black); }
+  .card.pinkc { background: var(--pink); border-color: var(--pink); }
+  @media (max-width: 860px) { .bento { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .bento { grid-template-columns: 1fr; } .card.wide, .card.tall { grid-column: auto; grid-row: auto; } }
+
+  /* ---------- Feasibility ---------- */
+  .timeline { margin-top: 56px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .step { background: var(--white); border-radius: var(--radius); padding: 24px; min-height: 190px; }
+  .step small { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; opacity: .55; }
+  .step h4 { font-size: 20px; margin: 10px 0 6px; letter-spacing: -.02em; }
+  .step p { font-size: 14px; opacity: .75; }
+  .swot { margin-top: 14px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .swot div { border-radius: var(--radius); padding: 22px; background: rgba(255,255,255,.55); }
+  .swot div:nth-child(1) { background: var(--black); color: var(--white); }
+  .swot b { font-size: 46px; font-weight: 800; letter-spacing: -.04em; line-height: 1; display: block; }
+  .swot ul { margin-top: 10px; padding-left: 18px; font-size: 14px; }
+  @media (max-width: 860px) { .timeline, .swot { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 520px) { .timeline, .swot { grid-template-columns: 1fr; } }
+
+  /* ---------- Impact ---------- */
+  .cols3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 56px; }
+  .cols3 h3 { font-size: 26px; letter-spacing: -.03em; margin-bottom: 10px; }
+  .cols3 p { font-size: 15px; color: var(--gray-text); }
+  .cols3 a { display: inline-block; margin-top: 14px; font-size: 13px; font-weight: 600; text-decoration: none; border-bottom: 1px solid; }
+  @media (max-width: 760px) { .cols3 { grid-template-columns: 1fr; } }
+
+  /* ---------- Conclusion ---------- */
+  .closing { text-align: center; padding-top: 160px; padding-bottom: 160px; }
+  .stagger { font-weight: 300; font-size: clamp(44px, 8vw, 112px); line-height: .98; letter-spacing: -.03em; text-transform: uppercase; }
+  .stagger span { display: block; }
+  .stagger span:nth-child(1) { transform: translateX(-8%); }
+  .stagger span:nth-child(3) { transform: translateX(10%); }
+  .closing .body { margin: 40px auto 0; color: rgba(255,255,255,.75); }
+
+  /* ---------- References ---------- */
+  .refs ol { margin-top: 40px; padding-left: 22px; max-width: 80ch; font-size: 15px; }
+  .refs li { padding: 10px 0; border-bottom: 1px solid #eee; }
+  footer { padding: 28px var(--gutter); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; background: var(--black); color: rgba(255,255,255,.6); }
+
+  /* Keep text clear of the cut-outs */
+  @media (min-width: 641px) and (max-width: 1280px) {
+    .has-cutout .wrap > *:not(.legend) { max-width: 60%; }
+    .has-cutout .story-text { max-width: 60%; }
+  }
+  @media (max-width: 640px) {
+    .has-cutout > .cutout { position: relative; right: auto !important; top: auto !important; bottom: auto !important;
+      width: 72% !important; margin: 40px auto -40px; order: 3; }
+    .has-cutout { display: flex; flex-direction: column; }
+    .hero.has-cutout { min-height: 0; }
+  }
+
+  .src { font-size: 12px; font-weight: 600; text-decoration: none; border: 1px solid currentColor; border-radius: 999px; padding: 1px 8px; margin-left: 4px; white-space: nowrap; }
+  .punch { font-size: 22px; font-weight: 700; letter-spacing: -.02em; line-height: 1.35; }
+  .pinkbg { background: var(--pink); }
+  .media { position: relative; }
+  .media img, .media video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .acc.light { border-top-color: rgba(0,0,0,.2); }
+  .acc.light details { border-bottom-color: rgba(0,0,0,.2); }
+  .acc.light .content { color: rgba(0,0,0,.8); }
+  .acc.light .prompt { border-color: rgba(0,0,0,.15); background: rgba(255,255,255,.5); }
+  .acc.light .prompt b { color: var(--red); }
+  #story .story-text { color: rgba(255,255,255,.9); }
+  .glass { z-index: 0 !important; }
+  section > .wrap { z-index: 3; }
+  @media (max-width: 900px) { .glass { opacity: .45; } }
+  #feasibility .big, #contribute .big, #ai .big { font-size: clamp(48px, 8vw, 112px); }
+
+  /* ================= Interactivity ================= */
+  .progress { position: fixed; top: 0; left: 0; height: 3px; width: 0; background: var(--red); z-index: 100; }
+  .cursor { position: fixed; top: 0; left: 0; width: 18px; height: 18px; border-radius: 50%; background: var(--pink-strong);
+    mix-blend-mode: multiply; pointer-events: none; z-index: 200; transform: translate(-50%,-50%);
+    transition: width .25s, height .25s, background .25s; }
+  .cursor.big { width: 64px; height: 64px; background: rgba(232,48,42,.25); }
+  @media (hover: none) { .cursor { display: none; } }
+
+  /* split letters */
+  .split .ch { display: inline-block; transform: translateY(110%) rotate(6deg); opacity: 0;
+    transition: transform .8s cubic-bezier(.2,.8,.2,1), opacity .8s, color .2s; }
+  .split .word { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .06em; }
+  .split.in .ch { transform: none; opacity: 1; }
+  .big.split .ch:hover { color: var(--red); transform: translateY(-8%) rotate(-4deg); transition-duration: .2s; }
+  .dark .big.split .ch:hover { color: var(--white); }
+
+  /* reveal on scroll */
+  .reveal { opacity: 0; transform: translateY(40px); transition: opacity .9s ease, transform .9s cubic-bezier(.2,.8,.2,1); }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* ghost words drift with scroll */
+  .ghost { will-change: transform; transition: transform .1s linear; }
+
+  /* glass reacts to mouse */
+  .glass { transition: translate .6s cubic-bezier(.2,.8,.2,1); }
+
+  /* hovers */
+  .body p { transition: color .3s; }
+  .stat { transition: transform .35s; cursor: default; }
+  .stat:hover { transform: translateY(-6px) scale(1.04); }
+  .stat:hover b { color: var(--red); }
+  .stat b { transition: color .3s; }
+  .media { transition: transform .5s cubic-bezier(.2,.8,.2,1), box-shadow .5s; }
+  .media:hover { transform: rotate(-1.5deg) scale(1.02); box-shadow: 0 30px 60px rgba(0,0,0,.18); }
+  .src { transition: background .2s, color .2s; }
+  .src:hover { background: var(--black); color: var(--white); border-color: var(--black); }
+  .ps, .pc, .pp, .prp { position: relative; cursor: help; border-bottom: 2px dotted currentColor; transition: background .2s; border-radius: 4px; }
+  .ps:hover, .pc:hover, .pp:hover, .prp:hover { background: rgba(255,255,255,.12); }
+  .ps::after, .pc::after, .pp::after, .prp::after {
+    position: absolute; left: 50%; bottom: calc(100% + 8px); transform: translate(-50%, 6px);
+    background: var(--white); color: var(--black); font-size: 12px; font-weight: 600; white-space: nowrap;
+    padding: 4px 10px; border-radius: 999px; opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; }
+  .ps::after { content: "Past Simple"; } .pc::after { content: "Past Continuous"; }
+  .pp::after { content: "Past Perfect"; } .prp::after { content: "Present Perfect"; }
+  .ps:hover::after, .pc:hover::after, .pp:hover::after, .prp:hover::after { opacity: 1; transform: translate(-50%, 0); }
+  .legend span { transition: transform .2s, background .2s; cursor: pointer; }
+  .legend span:hover { transform: translateY(-3px); background: rgba(255,255,255,.1); }
+  #story.focus .story-text span:not(.on) { opacity: .25; }
+  #story .story-text span { transition: opacity .3s; }
+  .acc summary { transition: padding-left .3s, color .3s; }
+  .acc summary:hover { padding-left: 14px; color: var(--red); }
+  .prompt { transition: transform .3s, box-shadow .3s; }
+  .prompt:hover { transform: translateX(8px); box-shadow: -6px 0 0 var(--red); }
+  .refs li { transition: padding-left .3s, background .3s; }
+  .refs li:hover { padding-left: 14px; background: var(--pink); }
+  nav ul a { position: relative; }
+  nav ul a::after { content: ""; position: absolute; left: 0; bottom: -4px; height: 2px; width: 0; background: currentColor; transition: width .3s; }
+  nav ul a:hover::after, nav ul a.active::after { width: 100%; }
+  nav ul a:hover { text-decoration: none; }
+  .pill .arrow { transition: transform .3s; }
+  .pill:hover .arrow { transform: translateX(4px) rotate(-45deg); }
+  .punch { background: linear-gradient(var(--red), var(--red)) 0 100% / 0 3px no-repeat; transition: background-size 1.2s ease .3s; display: inline; }
+  .punch.in { background-size: 100% 3px; }
+
+  /* marquee */
+  .marquee { overflow: hidden; white-space: nowrap; border-bottom: 1px solid #eee; padding: 18px 0; background: var(--white); }
+  .marquee .track { display: inline-block; animation: marq 28s linear infinite; font-size: clamp(18px, 2vw, 26px); font-weight: 700; letter-spacing: -.02em; }
+  .marquee .track span { margin: 0 28px; }
+  .marquee .track span:nth-child(even) { color: var(--pink-strong); }
+  .marquee:hover .track { animation-play-state: paused; }
+  @keyframes marq { to { transform: translateX(-50%); } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .split .ch, .reveal { transform: none !important; opacity: 1 !important; transition: none !important; }
+    .marquee .track { animation: none; }
+  }
+
+  /* ================= App mockup ================= */
+  .mock { margin-top: 72px; position: relative; display: flex; justify-content: center; align-items: center; gap: clamp(12px, 3vw, 40px);
+    padding: 60px 20px; border-radius: 36px; background: radial-gradient(circle at 50% 40%, #fde6ee, var(--pink) 70%); flex-wrap: wrap; }
+  .phone { --w: 250px; width: var(--w); aspect-ratio: 9 / 19.3; border-radius: 42px; background: #1a1a1a; padding: 9px;
+    box-shadow: 0 40px 80px rgba(120,30,60,.28), inset 0 0 0 2px #444; position: relative; transition: transform .5s cubic-bezier(.2,.8,.2,1); }
+  .phone:nth-child(1) { transform: rotate(-7deg) translateY(20px); }
+  .phone:nth-child(3) { transform: rotate(7deg) translateY(20px); }
+  .phone:nth-child(2) { --w: 280px; z-index: 2; }
+  .phone:hover { transform: rotate(0) translateY(-14px) scale(1.03); z-index: 3; }
+  .phone::before { content: ""; position: absolute; top: 18px; left: 50%; transform: translateX(-50%); width: 34%; height: 22px; background: #111; border-radius: 20px; z-index: 5; }
+  .screen { height: 100%; border-radius: 34px; overflow: hidden; position: relative; background: #fff7f9; color: #3a1f29;
+    font-size: 11px; display: flex; flex-direction: column; padding: 46px 16px 14px; }
+  .sbar { position: absolute; top: 16px; left: 22px; right: 22px; display: flex; justify-content: space-between; font-size: 10px; font-weight: 600; }
+  .scr-title { font-size: 19px; font-weight: 800; letter-spacing: -.03em; line-height: 1.1; }
+  .scr-title em { font-style: normal; color: #e05a7d; }
+  .muted { color: #9b7480; font-size: 10.5px; }
+  .chip-row { display: flex; gap: 8px; margin: 14px 0 6px; }
+  .avatar { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: 12px; color: #fff; }
+  .card-ui { background: #fff; border-radius: 18px; padding: 12px; box-shadow: 0 6px 18px rgba(224,90,125,.12); margin-top: 10px; }
+  .btn-ui { display: block; text-align: center; border-radius: 999px; padding: 9px; font-weight: 700; font-size: 11px; margin-top: 8px; }
+  .btn-ui.solid { background: #e05a7d; color: #fff; }
+  .btn-ui.soft { background: #fde3eb; color: #c2416a; }
+  .btn-ui.white { background: #fff; color: #c2416a; }
+  .sos-wrap { flex: 1; display: grid; place-items: center; }
+  .sos { width: 118px; height: 118px; border-radius: 50%; display: grid; place-items: center; text-align: center; cursor: pointer; position: relative;
+    background: radial-gradient(circle at 35% 30%, #ff9db8, #e05a7d 60%, #c43862); color: #fff; font-weight: 800; font-size: 13px; line-height: 1.15;
+    box-shadow: 0 0 0 12px rgba(224,90,125,.15), 0 0 0 26px rgba(224,90,125,.08), 0 14px 30px rgba(196,56,98,.45); user-select: none; }
+  .sos small { display: block; font-weight: 500; font-size: 9px; opacity: .85; margin-top: 3px; }
+  .sos::after { content: ""; position: absolute; inset: -6px; border-radius: 50%;
+    background: conic-gradient(#fff 0deg, transparent 0deg); -webkit-mask: radial-gradient(circle, transparent 62px, #000 63px); mask: radial-gradient(circle, transparent 62px, #000 63px);
+    transition: background 0s; }
+  .sos.holding::after { animation: fillring 1.5s linear forwards; }
+  @property --deg { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+  @keyframes fillring { from { --deg: 0deg; } to { --deg: 360deg; } }
+  .sos.holding::after { background: conic-gradient(#fff var(--deg), transparent var(--deg)); }
+  .tabbar { display: flex; justify-content: space-around; padding-top: 10px; border-top: 1px solid #f6d5df; font-size: 9px; color: #b88a98; }
+  .tabbar b { color: #e05a7d; }
+  /* map */
+  .map { height: 46%; margin: 10px -16px 0; position: relative; overflow: hidden;
+    background: #fbe9ef; background-image: linear-gradient(#f6d3de 1.5px, transparent 1.5px), linear-gradient(90deg, #f6d3de 1.5px, transparent 1.5px);
+    background-size: 34px 34px; }
+  .map svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .pin { position: absolute; width: 16px; height: 16px; border-radius: 50%; background: #e05a7d; box-shadow: 0 0 0 6px rgba(224,90,125,.25); }
+  .pin.me { animation: pulse 1.8s infinite; }
+  @keyframes pulse { 50% { box-shadow: 0 0 0 12px rgba(224,90,125,.05); } }
+  .bar-ui { height: 6px; border-radius: 6px; background: #fde3eb; margin-top: 8px; overflow: hidden; }
+  .bar-ui i { display: block; height: 100%; width: 62%; background: #e05a7d; border-radius: 6px; }
+  /* emergency */
+  .screen.alert { background: linear-gradient(170deg, #f7799b, #d9416b 70%); color: #fff; text-align: center; }
+  .screen.alert .muted { color: rgba(255,255,255,.85); }
+  .rings { flex: 1; display: grid; place-items: center; position: relative; }
+  .rings span { position: absolute; border-radius: 50%; border: 2px solid rgba(255,255,255,.5); animation: ripple 2.4s infinite; }
+  .rings span:nth-child(2) { animation-delay: .8s; } .rings span:nth-child(3) { animation-delay: 1.6s; }
+  @keyframes ripple { from { width: 60px; height: 60px; opacity: 1; } to { width: 210px; height: 210px; opacity: 0; } }
+  .rings .core { width: 74px; height: 74px; border-radius: 50%; background: #fff; color: #d9416b; display: grid; place-items: center; font-weight: 800; font-size: 22px; z-index: 1; border: 0; animation: none; position: relative; }
+  .contact-ok { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,.18); border-radius: 14px; padding: 7px 10px; margin-top: 6px; text-align: left; font-size: 10.5px; }
+  .contact-ok .avatar { width: 24px; height: 24px; font-size: 10px; }
+  .mock-caption { text-align: center; font-size: 13px; color: var(--gray-text); margin-top: 14px; }
+  @media (max-width: 900px) { .phone:nth-child(1), .phone:nth-child(3) { transform: none; } .phone, .phone:nth-child(2) { --w: 240px; } }
+</style>
+</head>
+<body>
+<div class="progress"></div><div class="cursor"></div>
+
+<nav>
+  <a class="logo" href="#top">acompaña.</a>
+  <ul>
+    <li><a href="#intro">Imagine</a></li>
+    <li><a href="#problem">The Problem</a></li>
+    <li><a href="#solution">Our Solution</a></li>
+    <li><a href="#feasibility">Feasibility</a></li>
+    <li><a href="#impact">Impact</a></li>
+    <li><a href="#ai">AI Process</a></li>
+  </ul>
+  <a class="pill" href="#refs">References</a>
+</nav>
+
+<!-- ============ TITLE ============ -->
+<header class="pink" id="top">
+  <section class="hero">
+    <div class="ghost" aria-hidden="true">acompaña</div>
+    <div class="glass" style="width:170px;height:170px;right:18%;top:16%;--r:-14deg"></div>
+    <div class="glass pill-shape" style="width:100px;height:230px;right:6%;bottom:10%;--r:28deg;animation-delay:-3s"></div>
+    <div class="glass" style="width:80px;height:80px;right:34%;bottom:16%;--r:10deg;animation-delay:-6s"></div>
+    <div class="wrap">
+      <p class="eyebrow">Global Solvers · Professional Communication II</p>
+      <h1 class="big">Never Alone on the Way Home: Acompaña Against Street Harassment</h1>
+      <div style="margin-top:36px"><a class="pill" href="#intro">Read the blog <span class="arrow"></span></a></div>
+      <p class="meta">By Paula Camayo &amp; Gabriela Cocuy · Interactive Media Design</p>
+    </div>
+  </section>
+</header>
+
+<div class="marquee" aria-hidden="true"><div class="track"><span>Walk home safe.</span><span>acompaña.</span><span>One gesture away.</span><span>acompaña.</span><span>Never alone.</span><span>acompaña.</span><span>Walk home safe.</span><span>acompaña.</span><span>One gesture away.</span><span>acompaña.</span><span>Never alone.</span><span>acompaña.</span></div></div>
+
+<!-- ============ INTRODUCTION ============ -->
+<section id="intro">
+  <div class="glass" style="width:120px;height:120px;right:10%;top:18%;--r:20deg"></div>
+  <div class="wrap">
+    <h2 class="big">Imagine...</h2>
+    <p class="lead" style="max-width:40ch">Imagine that you are walking home alone, and suddenly you feel someone is following you. What would you do? You can’t get your phone out of your pocket, it is difficult to ask for help without looking at your phone, and shouting could put you at greater risk.</p>
+  </div>
+</section>
+
+<!-- ============ STORY (narrative tenses) ============ -->
+<section class="dark" id="story">
+  <div class="ghost" aria-hidden="true">valentina</div>
+  <div class="glass" style="width:170px;height:170px;right:8%;top:10%;--r:-10deg"></div>
+  <div class="glass pill-shape" style="width:80px;height:180px;right:20%;bottom:12%;--r:40deg;animation-delay:-5s"></div>
+  <div class="wrap">
+    <p class="story-text" style="margin-top:0">That is exactly what happened to Valentina, a university student in Cali. She had stayed late at the library, and she was walking home when she noticed that a man had followed her for three blocks. Her phone was in her bag, and she froze.</p>
+    <p class="story-text">Unfortunately, this is a situation many people face, especially women. Feeling safe walking home alone is becoming rare, and we have started to see our rights as if they were optional.</p>
+  </div>
+</section>
+
+<!-- ============ PROBLEM ============ -->
+<section class="gray" id="problem">
+  <div class="ghost" aria-hidden="true">problem</div>
+  <div class="glass" style="width:120px;height:120px;right:8%;top:8%;--r:8deg"></div>
+  <div class="wrap">
+    <h2 class="big">The<br>Problem.</h2>
+    <div class="stats">
+      <div class="stat"><b>8 / 10</b><span>women have experienced street harassment</span></div>
+      <div class="stat"><b>9 / 10</b><span>are afraid of suffering a sexual attack in public spaces</span></div>
+      <div class="stat"><b>73%</b><span>did not know where to report harassment</span></div>
+    </div>
+    <div class="two-col">
+      <div class="body">
+        <p>So, what are we really talking about? Gender-based violence is any harmful act directed at a person because of their gender, and women and girls are the most affected. One of its most common forms is street harassment: unwanted comments, gestures, touching or following by strangers in public spaces.</p>
+        <p>In our society, girls learn from a very young age a set of codes to stay safe. It is very common to see groups of friends who share their location all the time, always go to the bathroom together, or even have a secret word that means “I’m in trouble.” These strategies exist for a reason: in Bogotá, 8 out of 10 women have experienced street harassment at some point in their lives, and 9 out of 10 are afraid of suffering a sexual attack in public spaces or on public transport (Infobae, 2023). <a class="src" href="https://www.infobae.com/colombia/2023/03/18/8-de-cada-10-mujeres-han-padecido-alguna-situacion-de-acoso-dentro-del-sistema-de-transmilenio-veeduria/" target="_blank" rel="noopener">infobae</a></p>
+        <p>Even though this problem is widely known, it is rarely addressed, because it exposes beliefs deeply rooted in a patriarchal society. That is why victims often hear questions like: Why were you alone at that time? Why didn’t you protect yourself? Why didn’t you fight back? What did you do to provoke it?</p>
+        <p class="punch">Being on alert 24/7 is exhausting. Having to explain yourself is exhausting. That is why we created Acompaña.</p>
+      </div>
+      <figure>
+        <div class="media">
+          <video src="images/problem.mp4" poster="images/problem-poster.jpg" autoplay muted loop playsinline aria-label="A young woman crossing a street alone"></video>
+        </div>
+        <figcaption>Video via Klickpin.com</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ============ OUR SOLUTION ============ -->
+<section id="solution">
+  <div class="ghost" aria-hidden="true" style="color:rgba(0,0,0,.04)">acompaña</div>
+  <div class="glass" style="width:110px;height:110px;right:40%;top:6%;--r:-12deg"></div>
+  <div class="wrap">
+    <h2 class="big">Our<br>Solution.</h2>
+    <p class="lead" style="max-width:44ch">Women’s safety shouldn’t depend on which way you walk home or whether you have company. With that in mind, we came up with Acompaña, a design project that uses technology to help people, especially women, feel supported on their way home.</p>
+    <div style="margin-top:48px">
+      <div class="body">
+        <p>Acompaña works on different devices so it can be accessible for everyone: phones, smartwatches and even a special bracelet, all designed to be as fast as possible to use. From the app, you can choose your trusted contacts, share your location and find information about support centers for women.</p>
+        <p>It has two main features. The preventive alert lets you tell your trusted contacts that you are on your way and share your location during the trip. The emergency alert is activated by pressing and holding a button, and it sends a priority notification with your location to your contacts, plus quick access to Colombia’s emergency line, 123.</p>
+        <p>You can activate alerts from your phone, connect your smartwatch for a more discreet option, or use our bracelet, which you can personalize to wear every day. It is designed to be waterproof and more affordable than a smartwatch. Our goal is to make women feel accompanied before, during and after their journeys.</p>
+      </div>
+      
+    </div>
+  
+    <div class="mock" aria-label="Acompaña app mockup">
+      <!-- Screen 1: Home -->
+      <div class="phone"><div class="screen">
+        <div class="sbar"><span>9:41</span><span>●●● ▮</span></div>
+        <div class="scr-title">Hi, <em>Valentina</em><br>Going somewhere?</div>
+        <p class="muted" style="margin-top:4px">Your trusted circle is ready.</p>
+        <div class="chip-row">
+          <div class="avatar" style="background:#e05a7d">M</div>
+          <div class="avatar" style="background:#f39ab3">S</div>
+          <div class="avatar" style="background:#c2416a">L</div>
+          <div class="avatar" style="background:#fde3eb;color:#c2416a">+</div>
+        </div>
+        <div class="sos-wrap"><div class="sos" title="Press and hold">HOLD<br>FOR HELP<small>press 1.5 s</small></div></div>
+        <div class="card-ui"><b>Preventive alert</b><div class="muted">Tell your contacts you're on your way</div><span class="btn-ui soft">Start my trip</span></div>
+        <div class="tabbar" style="margin-top:10px"><b>Home</b><span>Contacts</span><span>Support</span><span>Device</span></div>
+      </div></div>
+
+      <!-- Screen 2: Trip in progress -->
+      <div class="phone"><div class="screen">
+        <div class="sbar"><span>9:42</span><span>●●● ▮</span></div>
+        <div class="scr-title">On my <em>way home</em></div>
+        <p class="muted" style="margin-top:4px">Sharing live location with 3 contacts</p>
+        <div class="map">
+          <svg viewBox="0 0 260 220" preserveAspectRatio="none"><path d="M30 190 C 70 150, 60 110, 120 100 S 190 60, 225 30" fill="none" stroke="#e05a7d" stroke-width="5" stroke-linecap="round" stroke-dasharray="2 10"/></svg>
+          <div class="pin me" style="left:44%;top:42%"></div>
+          <div class="pin" style="left:84%;top:10%;background:#3a1f29"></div>
+        </div>
+        <div class="card-ui">
+          <div style="display:flex;justify-content:space-between"><b>Home · Cra. 100</b><b style="color:#e05a7d">12 min</b></div>
+          <div class="bar-ui"><i></i></div>
+          <div class="muted" style="margin-top:6px">Mom, Sara and Laura can see you</div>
+        </div>
+        <span class="btn-ui solid">I arrived safely</span>
+        <span class="btn-ui soft">Send emergency alert</span>
+      </div></div>
+
+      <!-- Screen 3: Emergency alert -->
+      <div class="phone"><div class="screen alert">
+        <div class="sbar"><span>9:47</span><span>●●● ▮</span></div>
+        <div class="scr-title" style="color:#fff">Alert sent</div>
+        <p class="muted" style="margin-top:4px">Your location is being shared</p>
+        <div class="rings"><span></span><span></span><span></span><div class="core">!</div></div>
+        <div class="contact-ok"><div class="avatar" style="background:#fff;color:#d9416b">M</div>Mom received your alert</div>
+        <div class="contact-ok"><div class="avatar" style="background:#fff;color:#d9416b">S</div>Sara is on her way</div>
+        <span class="btn-ui white" style="margin-top:10px">Call 123</span>
+        <span class="btn-ui" style="border:1.5px solid #fff">I'm safe now</span>
+      </div></div>
+    </div>
+    <p class="mock-caption">Acompaña app prototype: home, preventive alert and emergency alert. Tip: press and hold the button.</p>
+  </div>
+</section>
+
+<!-- ============ HOW WE CAN CONTRIBUTE ============ -->
+<section class="pink" id="contribute">
+  <div class="glass" style="width:140px;height:140px;right:8%;top:12%;--r:-22deg"></div>
+  <div class="glass pill-shape" style="width:70px;height:160px;right:22%;bottom:10%;--r:30deg;animation-delay:-4s"></div>
+  <div class="wrap">
+    <h2 class="big">How We Can<br>Contribute.</h2>
+    <div class="body" style="margin-top:48px">
+      <p>As designers and as women, we know that technology only helps if it works in stressful moments. From Interactive Media Design, we are creating an app for different devices with a simple interface, where one gesture, like holding a button, is enough to ask for help. We also designed how the app and the bracelet work together and built a prototype to test with real users. From Communication, we wrote clear alert messages and gathered information about support centers.</p>
+      <p>Acompaña brings safety and comfort to our daily lives. This matters because, according to UN Women, fewer than 40% of women who experience violence seek help, and most turn to family and friends. Acompaña makes that first call for help faster.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FEASIBILITY ============ -->
+<section class="dark" id="feasibility">
+  <div class="ghost" aria-hidden="true">phases</div>
+  <div class="glass" style="width:160px;height:160px;right:6%;top:10%;--r:16deg"></div>
+  <div class="wrap">
+    <h2 class="big accent">Feasibility<br>and Challenges.</h2>
+    <div class="body" style="margin-top:48px;color:rgba(255,255,255,.85)">
+      <p>Acompaña is a realistic project because it can grow in phases. First, as students, we can do the research, design the app prototype in Figma and test it with female students at Icesi, using free tools. Then, with partners such as engineering students, women’s organizations and Cali’s gender equity offices, the bracelet could be produced with technology that already exists, like GPS and Bluetooth.</p>
+      <p>Of course, there are challenges. If there is no internet, alerts can be sent by SMS. To protect privacy, the location is shared only during an active alert, following Colombia’s data protection law. And because emergency services may not respond immediately, alerts always reach trusted contacts first.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EXPECTED IMPACT ============ -->
+<section class="gray" id="impact">
+  <div class="ghost" aria-hidden="true">impact</div>
+  <div class="glass" style="width:120px;height:120px;right:10%;top:14%;--r:-6deg"></div>
+  <div class="wrap">
+    <h2 class="big">Expected<br>Impact.</h2>
+    <div class="body" style="margin-top:48px">
+      <p>In Cali, Acompaña would help young women and students move through the city with more confidence, knowing that help is one gesture away. It also gives them clear information about where to get support, which is important because in Bogotá, 73% of women surveyed said they did not know where to report harassment. <a class="src" href="https://bogota.gov.co/mi-ciudad/mujer/en-bogota-334-de-las-mujeres-ha-sufrido-violencia-en-transmilenio" target="_blank" rel="noopener">bogota</a></p>
+      <p>But this is not only a Colombian problem. According to UN Women, one in three women worldwide experience physical or sexual violence. Since emergency numbers and support centers can be changed in the app, Acompaña could be adapted to any country, contributing to the UN Sustainable Development Goal 5: Gender Equality. <a class="src" href="https://www.unwomen.org/en/what-we-do/ending-violence-against-women" target="_blank" rel="noopener">unwomen</a></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONCLUSION ============ -->
+<section class="dark closing" id="conclusion">
+  <div class="glass pill-shape" style="width:120px;height:260px;left:70%;top:12%;--r:60deg"></div>
+  <div class="glass" style="width:90px;height:90px;left:12%;bottom:14%;--r:-8deg;animation-delay:-4s"></div>
+  <div class="wrap">
+    <h2 class="stagger"><span>Conclusion</span><span>/ Call to</span><span>Action</span></h2>
+    <div class="body"><p>Gender-based violence takes away something as simple as walking home in peace. Acompaña cannot end this problem alone, but it can make sure that no woman feels alone when she needs help. We invite you to share this post, talk about this issue, and stop asking victims what they did wrong. Because walking home safely should never be a privilege.</p></div>
+  </div>
+</section>
+
+<!-- ============ AI-SUPPORTED PROCESS ============ -->
+<section class="pink" id="ai">
+  <div class="glass" style="width:160px;height:160px;right:-30px;top:8%;--r:18deg"></div>
+  <div class="wrap">
+    <h2 class="big">AI-Supported<br>Process.</h2>
+    <div class="acc light">
+      <details open>
+        <summary><span><small>A</small>Problem exploration with AI</span></summary>
+        <div class="content">
+          <p>During this project we mainly used ChatGPT as a support tool, not as a writer. First, we asked it to explain step by step how a blog like this should be built, and we followed that structure to write our own text. We also used it to find sources and statistics about street harassment and gender-based violence, and to look for similar projects. Later, we asked it for ideas on how to approach our solution and for possible names, and near the end we asked it to review our project. AI never wrote our blog, and it didn’t tell us anything about our project idea. Finally, we used AI (Claude) to help us build the HTML page where the blog is published, not to write its content.</p>
+        </div>
+      </details>
+      <details>
+        <summary><span><small>B</small>Prompting process</span></summary>
+        <div class="content">
+          <div class="prompt"><b>Prompt 1 · Blog structure</b>“We have to write a blog for our English class that proposes a solution to a social problem. Can you explain step by step how we should build it, and what is expected in each part?”</div>
+          <div class="prompt"><b>Prompt 2 · Sources</b>“We’re working on a university project about street harassment and women’s safety in Cali, Colombia. Can you help us find reliable sources with statistics about this? We’d also like to know if there are similar projects in other countries. Please include the links so we can check them.”</div>
+          <div class="prompt"><b>Prompt 3 · Ideas &amp; name</b>“We want to design an app and a bracelet that help women feel safe when they walk home alone. What are some ways we could approach this idea? Could you also suggest a few names for the project?”</div>
+          <div class="prompt"><b>Prompt 4 · Review</b>“This is our project: Acompaña, an app and a bracelet that let women send preventive and emergency alerts to their trusted contacts. Can you review it and tell us what’s missing, what isn’t clear, or what problems we could have if we tried to do it in real life?”</div>
+          <p style="margin-top:20px">At first, we only asked general questions about how to build the blog. The AI explained each part, for example, that the introduction needs a hook and has to present the problem, and we wrote each part ourselves following that guide. Later, our prompts became more specific: we gave more context (the city, the problem, what we study) and asked directly for links, so we could check the answers.</p>
+        </div>
+      </details>
+      <details>
+        <summary><span><small>C</small>Critical evaluation</span></summary>
+        <div class="content">
+          <p>The most useful parts were the step-by-step structure, the sources, and the review of our project. Not everything was useful: the AI gave us many name ideas, but most of them were too long or complicated, so we kept the first name that came up, Acompaña, because it was simple and clear. Every time the AI gave us a source, we opened the link and checked that the information really came from that website and that the numbers matched. If we couldn’t find it in the original source, we didn’t use it.</p>
+        </div>
+      </details>
+      <details>
+        <summary><span><small>D</small>Human contribution</span></summary>
+        <div class="content">
+          <p>We wrote the whole blog ourselves. AI only helped us with the structure, with finding sources, and with building the web page. We made all the important decisions together: the problem, how Acompaña works, its name, and which sources to trust. Our discipline, Interactive Media Design, is the base of the proposal: it taught us to design for the user, to create simple interfaces, and to prototype and test with real people. We also know our local context, so we adapted the general ideas to the reality of women in Cali.</p>
+        </div>
+      </details>
+      <details>
+        <summary><span><small>E</small>Ethical reflection</span></summary>
+        <div class="content">
+          <p>AI can be very helpful, but it can also give false information or invent sources, so it must be checked. It can also reflect bias, because it gives general answers that don’t always fit a specific community. For us, using AI responsibly means using it as a guide and never letting it replace our own thinking or our own voice.</p>
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ REFERENCES ============ -->
+<section class="refs" id="refs">
+  <div class="wrap">
+    <h2 class="big" style="font-size:clamp(48px,7vw,96px)">References.</h2>
+    <ol>
+      <li>Alcaldía de Bogotá. (n.d.). <em>Conoce cifras sobre el acoso sexual callejero en Bogotá: ¿qué viven las mujeres y dónde pueden buscar ayuda?</em> <a href="https://bogota.gov.co/mi-ciudad/mujer/en-bogota-334-de-las-mujeres-ha-sufrido-violencia-en-transmilenio" target="_blank" rel="noopener">https://bogota.gov.co/mi-ciudad/mujer/en-bogota-334-de-las-mujeres-ha-sufrido-violencia-en-transmilenio</a></li>
+      <li>Infobae. (2023, March 18). <em>8 de cada 10 mujeres han padecido alguna situación de acoso dentro del sistema de Transmilenio: Veeduría.</em> <a href="https://www.infobae.com/colombia/2023/03/18/8-de-cada-10-mujeres-han-padecido-alguna-situacion-de-acoso-dentro-del-sistema-de-transmilenio-veeduria/" target="_blank" rel="noopener">https://www.infobae.com/colombia/2023/03/18/8-de-cada-10-mujeres-han-padecido-alguna-situacion-de-acoso-dentro-del-sistema-de-transmilenio-veeduria/</a></li>
+      <li>UN Women. (n.d.). <em>Ending violence against women.</em> <a href="https://www.unwomen.org/en/what-we-do/ending-violence-against-women" target="_blank" rel="noopener">https://www.unwomen.org/en/what-we-do/ending-violence-against-women</a></li>
+      <li>United Nations Statistics Division. (2015). <em>The world’s women 2015: Chapter 6, Violence against women.</em> <a href="https://unstats.un.org/unsd/gender/chapter6/chapter6.html" target="_blank" rel="noopener">https://unstats.un.org/unsd/gender/chapter6/chapter6.html</a></li>
+      <li>AI tools used: ChatGPT (OpenAI) for structure guidance, source search and project review; Claude (Anthropic) for building the HTML page.</li>
+    </ol>
+  </div>
+</section>
+
+<footer>
+  <span>acompaña. — Global Solvers Project</span>
+  <span>Professional Communication II · 2026</span>
+</footer>
+
+
+<script>
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Split big headings into letters
+  document.querySelectorAll('.big, .stagger span').forEach(el => {
+    const walk = node => {
+      [...node.childNodes].forEach(n => {
+        if (n.nodeType === 3) {
+          const frag = document.createDocumentFragment();
+          n.textContent.split(/(\s+)/).forEach(part => {
+            if (!part) return;
+            if (/^\s+$/.test(part)) { frag.append(' '); return; }
+            const w = document.createElement('span'); w.className = 'word';
+            [...part].forEach(c => { const s = document.createElement('span'); s.className = 'ch'; s.textContent = c; w.append(s); });
+            frag.append(w);
+          });
+          n.replaceWith(frag);
+        } else if (n.nodeType === 1 && n.tagName !== 'BR') walk(n);
+      });
+    };
+    walk(el);
+    el.classList.add('split');
+    el.querySelectorAll('.ch').forEach((c, i) => c.style.transitionDelay = (i * 0.025) + 's');
+  });
+  // Hover on letters shouldn't wait for the stagger delay once visible
+  document.querySelectorAll('.split').forEach(el => el.addEventListener('transitionend', () => {
+    el.querySelectorAll('.ch').forEach(c => c.style.transitionDelay = '0s');
+  }, { once: true }));
+
+  // Reveal targets
+  document.querySelectorAll('.lead, .body p, .story-text, .stat, .media, .legend, .acc details, .refs li, .eyebrow, .meta, .hero .pill, .punch')
+    .forEach(el => el.classList.add('reveal'));
+  document.querySelectorAll('.stats .stat').forEach((el, i) => el.style.transitionDelay = (i * .12) + 's');
+
+  const io = new IntersectionObserver(entries => entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+  }), { threshold: 0.15 });
+  document.querySelectorAll('.reveal, .split, .punch').forEach(el => io.observe(el));
+
+  // Count-up stats
+  const countIO = new IntersectionObserver(entries => entries.forEach(e => {
+    if (!e.isIntersecting) return; countIO.unobserve(e.target);
+    const b = e.target, final = b.textContent, m = final.match(/\d+/); if (!m || reduce) return;
+    const target = +m[0], t0 = performance.now();
+    const tick = t => { const k = Math.min(1, (t - t0) / 1200); b.textContent = final.replace(/\d+/, Math.round(target * (1 - Math.pow(1 - k, 3)))); if (k < 1) requestAnimationFrame(tick); };
+    requestAnimationFrame(tick);
+  }), { threshold: .6 });
+  document.querySelectorAll('.stat b').forEach(b => countIO.observe(b));
+
+  // Scroll: progress bar, ghost words drift, active nav link
+  const bar = document.querySelector('.progress');
+  const ghosts = [...document.querySelectorAll('.ghost')];
+  const links = [...document.querySelectorAll('nav ul a')];
+  const onScroll = () => {
+    const h = document.documentElement;
+    bar.style.width = (h.scrollTop / (h.scrollHeight - innerHeight) * 100) + '%';
+    if (!reduce) ghosts.forEach(g => {
+      const r = g.parentElement.getBoundingClientRect();
+      g.style.transform = `translateX(${(r.top / innerHeight) * -18}vw)`;
+    });
+    let cur = null;
+    links.forEach(a => { const sec = document.querySelector(a.getAttribute('href')); if (sec && sec.getBoundingClientRect().top < innerHeight * .4) cur = a; });
+    links.forEach(a => a.classList.toggle('active', a === cur));
+  };
+  addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+  // Cursor + glass shapes follow the mouse
+  const cur = document.querySelector('.cursor');
+  const glasses = [...document.querySelectorAll('.glass')];
+  addEventListener('mousemove', e => {
+    cur.style.left = e.clientX + 'px'; cur.style.top = e.clientY + 'px';
+    if (reduce) return;
+    const dx = (e.clientX / innerWidth - .5), dy = (e.clientY / innerHeight - .5);
+    glasses.forEach((g, i) => { const k = 30 + (i % 3) * 20; g.style.translate = `${dx * k}px ${dy * k}px`; });
+  });
+  document.querySelectorAll('a, summary, .stat, .media, .legend span, .ps, .pc, .pp, .prp').forEach(el => {
+    el.addEventListener('mouseenter', () => cur.classList.add('big'));
+    el.addEventListener('mouseleave', () => cur.classList.remove('big'));
+  });
+
+  // Legend hover: highlight only that tense in the story
+  const story = document.getElementById('story');
+  const map = ['ps', 'pc', 'pp', 'prp'];
+  document.querySelectorAll('.legend span').forEach((chip, i) => {
+    chip.addEventListener('mouseenter', () => {
+      story.classList.add('focus');
+      story.querySelectorAll('.story-text span').forEach(s => s.classList.toggle('on', s.classList.contains(map[i])));
+    });
+    chip.addEventListener('mouseleave', () => story.classList.remove('focus'));
+  });
+
+  // Press-and-hold SOS button demo
+  document.querySelectorAll('.sos').forEach(btn => {
+    let t;
+    const start = e => { e.preventDefault(); btn.classList.add('holding'); t = setTimeout(() => {
+      btn.innerHTML = 'ALERT<br>SENT<small>contacts notified</small>'; btn.classList.remove('holding');
+      setTimeout(() => btn.innerHTML = 'HOLD<br>FOR HELP<small>press 1.5 s</small>', 2200); }, 1500); };
+    const stop = () => { clearTimeout(t); btn.classList.remove('holding'); };
+    btn.addEventListener('pointerdown', start);
+    ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => btn.addEventListener(ev, stop));
+  });
+})();
+</script>
+</body>
+
+</html>

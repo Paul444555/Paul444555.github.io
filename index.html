@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paula Camayo · Portafolio</title>
+<meta name="description" content="Portafolio de Paula Andrea Camayo Argumero, estudiante de Diseño de Medios Interactivos en la Universidad Icesi.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ---------- Design tokens (change the palette here) ---------- */
+  :root {
+    --crema: #EFF8FF;      /* blanco hielo */
+    --negro: #0D0303;
+    --rosa: #F7C8D8;       /* rosa pastel */
+    --rosa-fuerte: #F4A6C3;
+    --fucsia: #FF0055;     /* acento neón */
+    --gris: #5F6670;
+    --blanco: #FFFFFF;
+    --radius: 26px;
+    --gutter: clamp(16px, 5vw, 72px);
+    --display: "Anton", "Impact", sans-serif;
+    --serif: "Instrument Serif", Georgia, serif;
+    --sans: "Inter Tight", "Helvetica Neue", Arial, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--sans); background: var(--crema); color: var(--negro); line-height: 1.55; overflow-x: hidden; }
+  img { max-width: 100%; display: block; }
+  a { color: inherit; text-decoration: none; }
+  ::selection { background: var(--fucsia); color: var(--blanco); }
+
+  section { position: relative; padding: clamp(80px, 11vw, 150px) var(--gutter); overflow: hidden; }
+  .wrap { max-width: 1240px; margin: 0 auto; position: relative; z-index: 2; }
+  .eyebrow { font-size: 13px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; }
+  .display { font-family: var(--display); text-transform: uppercase; line-height: .86; letter-spacing: -.01em; font-weight: 400; }
+  .serif { font-family: var(--serif); font-style: italic; font-weight: 400; }
+
+  /* ---------- Custom cursor (desktop only) ---------- */
+  .cursor, .cursor-ring { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 999; border-radius: 50%;
+                          transform: translate(-50%, -50%); }
+  .cursor { width: 8px; height: 8px; background: var(--fucsia); }
+  .cursor-ring { width: 38px; height: 38px; border: 1.5px solid var(--negro); display: grid; place-items: center;
+                 font-size: 12px; font-weight: 700; color: var(--blanco); letter-spacing: .04em;
+                 transition: width .25s, height .25s, background .25s, border-color .25s; mix-blend-mode: normal; }
+  .cursor-ring span { opacity: 0; transition: opacity .2s; }
+  body.hovering .cursor-ring { width: 64px; height: 64px; background: rgba(255,0,85,.15); border-color: var(--fucsia); }
+  body.labeled .cursor-ring { width: 88px; height: 88px; background: var(--fucsia); border-color: var(--fucsia); }
+  body.labeled .cursor-ring span { opacity: 1; }
+  body.labeled .cursor { opacity: 0; }
+  @media (hover: none), (pointer: coarse) { .cursor, .cursor-ring { display: none; } }
+  @media (hover: hover) and (pointer: fine) { body.has-cursor, body.has-cursor a, body.has-cursor button { cursor: none; } }
+
+  /* ---------- Asterisk shape ---------- */
+  .ast { display: inline-block; color: var(--rosa-fuerte); }
+  .ast svg { width: 100%; height: 100%; display: block; }
+  .spin { animation: spin 14s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ---------- Nav ---------- */
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 60; display: flex; justify-content: space-between; align-items: center;
+        gap: 20px; padding: 16px var(--gutter); transition: background .3s, padding .3s; }
+  nav.scrolled { background: rgba(239,248,255,.86); backdrop-filter: blur(12px); padding-block: 10px; }
+  .logo { font-weight: 800; font-size: 19px; letter-spacing: -.03em; display: flex; align-items: center; gap: 6px; }
+  .logo .ast { width: 18px; height: 18px; color: var(--fucsia); }
+  nav ul { display: flex; gap: 6px; list-style: none; font-size: 14px; font-weight: 500; }
+  nav ul a { padding: 8px 14px; border-radius: 999px; transition: background .2s, color .2s; }
+  nav ul a:hover { background: var(--negro); color: var(--crema); }
+  @media (max-width: 860px) { nav ul { display: none; } }
+
+  .pill { display: inline-flex; align-items: center; gap: 10px; border: 1.5px solid currentColor; border-radius: 999px;
+          padding: 10px 12px 10px 20px; font-size: 14px; font-weight: 600; transition: background .25s, color .25s, border-color .25s; white-space: nowrap; }
+  .pill .arrow { width: 26px; height: 26px; border-radius: 50%; background: currentColor; display: grid; place-items: center; transition: transform .3s; }
+  .pill .arrow::after { content: "→"; color: var(--crema); font-size: 13px; }
+  .pill:hover { background: var(--fucsia); border-color: var(--fucsia); color: var(--blanco); }
+  .pill:hover .arrow { transform: rotate(-45deg); }
+  .pill:hover .arrow::after { color: var(--fucsia); }
+  .pill.solid { background: var(--negro); color: var(--crema); border-color: var(--negro); }
+  .pill.solid .arrow { background: var(--crema); } .pill.solid .arrow::after { color: var(--negro); }
+  .pill.solid:hover { background: var(--fucsia); border-color: var(--fucsia); }
+
+  /* ---------- Hero ---------- */
+  .hero { min-height: 100vh; padding-top: 110px; padding-bottom: 60px; display: flex; flex-direction: column; justify-content: center; }
+  .hero .meta { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-size: 13px; font-weight: 500; color: var(--gris);
+                max-width: 1240px; margin: 0 auto 18px; width: 100%; }
+  .hero-line { font-size: clamp(84px, 19.5vw, 300px); white-space: nowrap; text-align: center; position: relative; z-index: 2;
+               will-change: transform; }
+  .hero-line.bottom { color: transparent; -webkit-text-stroke: 2px var(--negro); }
+  .ch { display: inline-block; transition: transform .35s cubic-bezier(.3,1.6,.5,1), color .25s; }
+  .hero-line .ch:hover { transform: translateY(-8%) rotate(-4deg); color: var(--fucsia); -webkit-text-stroke: 0; }
+  .hero-mid { position: relative; z-index: 3; max-width: 1240px; width: 100%; margin: 10px auto; display: grid;
+              grid-template-columns: 1fr auto 1fr; align-items: center; gap: clamp(16px, 3vw, 48px); }
+  .hello { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+  .tag { display: inline-block; background: var(--rosa); padding: 2px 12px; font-size: clamp(18px, 2vw, 28px); font-weight: 500;
+         transform: rotate(-4deg); transition: transform .3s, background .3s; }
+  .tag:nth-child(2) { margin-left: 28px; transform: rotate(-2deg); }
+  .tag:hover { transform: rotate(3deg) scale(1.06); background: var(--fucsia); color: var(--blanco); }
+  .hello .name { font-size: clamp(70px, 9vw, 150px); line-height: .8; margin-top: 4px; }
+  .hello .name .ch:hover { color: var(--fucsia); transform: translateY(-6px) rotate(6deg); }
+
+  .portrait { --w: clamp(230px, 27vw, 380px); position: relative; width: var(--w); aspect-ratio: 1; margin-block: clamp(-60px, -4vw, -20px); }
+  .portrait .photo { position: absolute; inset: 15%; border-radius: 50%; background: var(--rosa);
+                     box-shadow: 0 30px 60px rgba(0,0,0,.18); transition: transform .4s cubic-bezier(.3,1.4,.5,1), background .3s; }
+  .portrait:hover .photo { transform: scale(1.06); background: var(--fucsia); }
+  /* Cut-out that pops out of the circle: union of the circle and everything above its center */
+  .portrait .pop { position: absolute; left: 15%; right: 15%; bottom: 15%; top: -14%; z-index: 2;
+                   -webkit-mask: radial-gradient(circle closest-side, #000 99%, transparent 100%) bottom / 100% calc(var(--w) * .7) no-repeat,
+                                 linear-gradient(#000, #000) top / 100% calc(100% - var(--w) * .35) no-repeat;
+                           mask: radial-gradient(circle closest-side, #000 99%, transparent 100%) bottom / 100% calc(var(--w) * .7) no-repeat,
+                                 linear-gradient(#000, #000) top / 100% calc(100% - var(--w) * .35) no-repeat; }
+  .portrait .pop img { position: absolute; bottom: -4%; left: 50%; height: 104%; width: auto; max-width: none; transform: translateX(-50%);
+                       transform-origin: bottom center; transition: transform .5s cubic-bezier(.3,1.5,.5,1); filter: drop-shadow(0 12px 18px rgba(0,0,0,.18)); }
+  .portrait:hover .pop img { transform: translateX(-50%) scale(1.07) rotate(-2deg); }
+  .portrait .ring { position: absolute; inset: 0; animation: spin 22s linear infinite; }
+  .portrait .ring text { font-family: var(--sans); font-weight: 700; font-size: 10.5px; letter-spacing: .32em; fill: var(--negro); text-transform: uppercase; }
+  .portrait .badge { position: absolute; right: 4%; bottom: 8%; width: 25%; height: 25%; color: var(--fucsia); z-index: 3; }
+
+  .intro { font-size: clamp(16px, 1.3vw, 19px); max-width: 32ch; justify-self: end; }
+  .intro p { margin-bottom: 18px; }
+  .intro .row { display: flex; gap: 10px; flex-wrap: wrap; }
+
+  .wave { position: absolute; left: 0; width: 100%; top: 30%; height: 60%; z-index: 1; pointer-events: none; }
+  .wave path { fill: none; stroke: var(--fucsia); stroke-width: 22; stroke-linecap: round; }
+
+  @media (max-width: 900px) {
+    .hero-mid { grid-template-columns: 1fr; justify-items: center; text-align: center; margin: 10px auto; }
+    .hello { align-items: center; } .intro { justify-self: center; } .intro .row { justify-content: center; }
+    .portrait { margin-block: 70px 0; }
+  }
+  @media (max-width: 600px) {
+    .hero-line { font-size: 21vw; }
+    .hero .meta { justify-content: center; text-align: center; }
+    .wave { top: auto; bottom: 0; height: 18%; opacity: .9; }
+    .tag:nth-child(2) { margin-left: 0; }
+  }
+
+  /* ---------- Marquee ---------- */
+  .marquee { background: var(--negro); color: var(--rosa); padding: 22px 0; overflow: hidden; position: relative; z-index: 4; }
+  .marquee .track { display: flex; width: max-content; will-change: transform; }
+  .marquee .item { font-family: var(--display); font-size: clamp(34px, 5vw, 64px); text-transform: uppercase; line-height: 1;
+                   display: flex; align-items: center; gap: 28px; padding-right: 28px; white-space: nowrap; }
+  .marquee .item .ast { width: .6em; height: .6em; color: var(--fucsia); }
+  .marquee .item span { transition: color .2s; } .marquee .item span:hover { color: var(--crema); }
+  .marquee.tilt { transform: rotate(-2deg) scale(1.03); margin-top: -10px; }
+
+  /* ---------- About ---------- */
+  .about { display: grid; grid-template-columns: 1.05fr .95fr; padding: 0; min-height: 90vh; }
+  .about .dark { background: var(--negro); color: var(--crema); padding: clamp(80px, 9vw, 130px) var(--gutter); position: relative; overflow: hidden; }
+  .about .title { font-size: clamp(64px, 9vw, 150px); }
+  .about .title .ast { width: .7em; height: .7em; vertical-align: -.02em; margin-left: .1em; }
+  .about .title .ch:hover { color: var(--rosa); transform: scaleY(1.12); }
+  .about .text { max-width: 46ch; font-size: clamp(16px, 1.3vw, 18px); color: rgba(245,241,234,.82); margin-top: 32px; }
+  .about .text p + p { margin-top: 1em; }
+  .about .text b { color: var(--rosa); font-weight: 600; }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 48px; max-width: 560px; }
+  .stat b { display: block; font-family: var(--display); font-size: clamp(38px, 4vw, 58px); line-height: 1; color: var(--crema); font-weight: 400; }
+  .stat span { font-size: 12.5px; color: rgba(245,241,234,.6); }
+  .about .pic { position: relative; overflow: hidden; background: var(--rosa); min-height: 520px; }
+  .about .pic .ast.big-ast { position: absolute; width: 70%; aspect-ratio: 1; height: auto; left: 15%; top: 12%; color: rgba(255,255,255,.55); }
+  .about .pic img { position: absolute; bottom: 0; left: 50%; height: 92%; width: auto; max-width: none; transform: translateX(-50%);
+                    transform-origin: bottom center; filter: grayscale(1); transition: filter .6s, transform .8s cubic-bezier(.3,1.3,.5,1); }
+  .about .pic:hover img { filter: none; transform: translateX(-50%) scale(1.04); }
+  .about .pic:hover .big-ast { color: var(--fucsia); }
+  .about .pic .note { position: absolute; left: 24px; bottom: 24px; background: var(--crema); padding: 12px 16px; border-radius: 16px;
+                      font-size: 13px; max-width: 240px; box-shadow: 0 10px 30px rgba(0,0,0,.15); transform: rotate(-3deg); }
+  .about .pic .note b { display: block; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--fucsia); }
+  @media (max-width: 900px) { .about { grid-template-columns: 1fr; } .stats { grid-template-columns: repeat(2, 1fr); } }
+
+  /* ---------- Projects ---------- */
+  .projects { background: var(--rosa); }
+  .ghost { position: absolute; top: 40px; left: 0; z-index: 0; pointer-events: none; white-space: nowrap; font-family: var(--display);
+           text-transform: uppercase; font-size: clamp(140px, 26vw, 400px); line-height: .8; color: rgba(255,255,255,.55); will-change: transform; }
+  .proj-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap; margin-bottom: 40px; }
+  .proj-head h2 { font-size: clamp(56px, 8vw, 120px); }
+  .filters { display: flex; gap: 8px; flex-wrap: wrap; }
+  .filters button { font: inherit; font-size: 14px; font-weight: 600; padding: 9px 18px; border-radius: 999px; border: 1.5px solid var(--negro);
+                    background: transparent; color: var(--negro); transition: background .2s, color .2s, transform .2s; }
+  .filters button:hover { transform: translateY(-2px); }
+  .filters button.on { background: var(--negro); color: var(--rosa); }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; perspective: 1200px; }
+  .card { position: relative; background: var(--blanco); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column;
+          box-shadow: 0 18px 40px rgba(14,14,14,.12); transform-style: preserve-3d; transition: transform .25s ease-out, box-shadow .3s, opacity .35s; }
+  .card:hover { box-shadow: 0 30px 70px rgba(14,14,14,.22); }
+  .card.hide { display: none; }
+  .card.wide { grid-column: span 2; }
+  .card.wide .thumb { aspect-ratio: 1650 / 632; }
+  .card.code.wide .thumb { font-size: 15px; }
+  .grid.filtered .card.wide { grid-column: auto; }
+  .grid.filtered .card.wide .thumb { aspect-ratio: 808 / 632; }
+  .card .thumb { aspect-ratio: 808 / 632; overflow: hidden; position: relative; background: var(--negro); }
+  .card .thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform .7s cubic-bezier(.2,.8,.2,1); }
+  .card:hover .thumb img { transform: scale(1.08); }
+  .card .thumb .over { position: absolute; inset: auto 0 0 0; padding: 14px 16px; display: flex; gap: 6px; flex-wrap: wrap;
+                       transform: translateY(100%); transition: transform .35s; background: linear-gradient(transparent, rgba(0,0,0,.6)); }
+  .card:hover .thumb .over { transform: none; }
+  .card .thumb .over span { background: var(--crema); font-size: 11.5px; font-weight: 600; padding: 4px 10px; border-radius: 999px; }
+  .card .info { padding: 18px 20px 22px; display: flex; justify-content: space-between; gap: 14px; align-items: flex-start; flex: 1; }
+  .card h3 { font-size: 20px; font-weight: 700; letter-spacing: -.02em; line-height: 1.15; }
+  .card p { font-size: 14px; color: var(--gris); margin-top: 6px; }
+  .card .go { flex: none; width: 42px; height: 42px; border-radius: 50%; background: var(--negro); color: var(--crema); display: grid; place-items: center;
+              font-size: 17px; transition: background .25s, transform .35s; }
+  .card:hover .go { background: var(--fucsia); transform: rotate(-45deg); }
+  .card .num { position: absolute; top: 14px; left: 14px; z-index: 2; background: var(--crema); font-size: 12px; font-weight: 700;
+               padding: 4px 10px; border-radius: 999px; }
+  .card.code .thumb { display: grid; place-items: center; background: var(--negro); color: var(--rosa); font-family: ui-monospace, Menlo, monospace;
+                      font-size: 13px; padding: 24px; }
+  .card.code pre { line-height: 1.6; white-space: pre-wrap; }
+  .card.code pre i { color: var(--fucsia); font-style: normal; }
+  .more { margin-top: 44px; display: flex; justify-content: center; }
+  @media (max-width: 1000px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 1000px) { .card.wide { grid-column: auto; } .card.wide .thumb { aspect-ratio: 808 / 632; } }
+  @media (max-width: 640px) { .grid { grid-template-columns: 1fr; } }
+
+  /* ---------- Process ---------- */
+  .process h2 { font-size: clamp(56px, 8vw, 120px); max-width: 10ch; }
+  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 56px; }
+  .step { border: 1.5px solid var(--negro); border-radius: var(--radius); padding: 26px 22px 30px; min-height: 260px; display: flex; flex-direction: column;
+          justify-content: space-between; transition: background .35s, color .35s, transform .35s; }
+  .step:hover { background: var(--negro); color: var(--crema); transform: translateY(-8px) rotate(-1deg); }
+  .step:nth-child(2):hover { background: var(--fucsia); color: var(--blanco); border-color: var(--fucsia); }
+  .step:nth-child(3):hover { background: var(--rosa); color: var(--negro); border-color: var(--rosa); }
+  .step:nth-child(4):hover { background: var(--rosa-fuerte); color: var(--negro); border-color: var(--rosa-fuerte); }
+  .step .n { font-family: var(--display); font-size: 54px; line-height: 1; }
+  .step h3 { font-size: 22px; letter-spacing: -.02em; margin-bottom: 6px; }
+  .step p { font-size: 14.5px; opacity: .8; }
+  @media (max-width: 900px) { .steps { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .steps { grid-template-columns: 1fr; } }
+
+  /* ---------- Tools ---------- */
+  .tools { background: var(--blanco); }
+  .tools .cols { display: grid; grid-template-columns: .8fr 1.2fr; gap: 56px; align-items: start; }
+  .tools h2 { font-size: clamp(56px, 8vw, 120px); }
+  .tools .lead { margin-top: 20px; color: var(--gris); max-width: 34ch; }
+  .group + .group { margin-top: 34px; }
+  .group h3 { font-size: 13px; letter-spacing: .14em; text-transform: uppercase; margin-bottom: 14px; color: var(--gris); }
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; }
+  .chip { display: inline-block; font-size: clamp(16px, 1.6vw, 22px); font-weight: 600; padding: 10px 20px; border-radius: 999px;
+          border: 1.5px solid var(--negro); transition: background .2s, color .2s, border-color .2s; will-change: transform; }
+  .group:nth-child(1) .chip:hover { background: var(--rosa); border-color: var(--rosa); }
+  .group:nth-child(2) .chip:hover { background: var(--fucsia); border-color: var(--fucsia); color: var(--blanco); }
+  .group:nth-child(3) .chip:hover { background: var(--rosa-fuerte); border-color: var(--rosa-fuerte); color: var(--negro); }
+  .group:nth-child(4) .chip:hover { background: var(--negro); color: var(--crema); }
+  @media (max-width: 900px) { .tools .cols { grid-template-columns: 1fr; } }
+
+  /* ---------- Contact ---------- */
+  .contact { background: var(--negro); color: var(--crema); text-align: center; padding-bottom: 40px; }
+  .contact .eyebrow { color: var(--rosa); }
+  .contact .big { font-size: clamp(90px, 20vw, 320px); margin: 20px 0 10px; white-space: nowrap; }
+  .contact .big .ch { transition: transform .4s cubic-bezier(.3,1.6,.5,1), color .25s; }
+  .contact .big .ch:hover { color: var(--fucsia); transform: translateY(-10%) scaleY(1.1); }
+  .mail { display: inline-flex; align-items: center; gap: 14px; font-size: clamp(20px, 3vw, 40px); font-weight: 600; letter-spacing: -.02em;
+          border-bottom: 2px solid var(--rosa); padding-bottom: 6px; transition: color .2s, border-color .2s; background: none; border-top: 0; border-left: 0; border-right: 0;
+          color: inherit; font-family: inherit; }
+  .mail:hover { color: var(--rosa); border-color: var(--fucsia); }
+  .mail small { font-size: 13px; font-weight: 600; background: var(--rosa); color: var(--negro); padding: 4px 10px; border-radius: 999px; letter-spacing: 0; }
+  .polaroid { position: absolute; z-index: 1; width: clamp(150px, 15vw, 230px); background: var(--crema); padding: 10px 10px 34px;
+              box-shadow: 0 20px 40px rgba(0,0,0,.45); transition: transform .45s cubic-bezier(.3,1.5,.5,1); }
+  .polaroid img { width: 100%; aspect-ratio: 1; object-fit: cover; }
+  .polaroid figcaption { position: absolute; left: 0; right: 0; bottom: 7px; text-align: center; color: var(--negro);
+                         font-family: var(--serif); font-style: italic; font-size: 20px; }
+  .polaroid.p1 { left: 6%; bottom: 120px; transform: rotate(-9deg); }
+  .polaroid.p2 { right: 6%; bottom: 160px; transform: rotate(8deg); }
+  .polaroid:hover { transform: rotate(0) scale(1.08); z-index: 5; }
+  .contact .big, .contact .mail, .contact .socials { position: relative; z-index: 2; }
+  @media (max-width: 1100px) { .polaroid { position: relative; display: inline-block; left: auto !important; right: auto !important; bottom: auto !important; margin: 0 6px 20px; width: 140px; } }
+  .socials { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 40px; }
+  .socials .pill { color: var(--crema); }
+  .socials .pill .arrow::after { color: var(--negro); }
+  footer { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-size: 13px; color: rgba(245,241,234,.5);
+           margin-top: 110px; padding-top: 22px; border-top: 1px solid rgba(245,241,234,.15); max-width: 1240px; margin-inline: auto; }
+
+  /* ---------- Reveal on scroll ---------- */
+  [data-reveal] { opacity: 0; transform: translateY(40px); transition: opacity .9s cubic-bezier(.2,.8,.2,1), transform .9s cubic-bezier(.2,.8,.2,1); }
+  [data-reveal].in { opacity: 1; transform: none; }
+  .split-in .ch { opacity: 0; transform: translateY(60%); }
+  .split-in.in .ch { opacity: 1; transform: none; transition: transform .7s cubic-bezier(.2,.9,.3,1.2), opacity .5s, color .25s;
+                     transition-delay: calc(var(--i) * 35ms); }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    [data-reveal], .split-in .ch { opacity: 1 !important; transform: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" aria-hidden="true"></div>
+<div class="cursor-ring" aria-hidden="true"><span>Ver</span></div>
+
+<!-- Reusable asterisk -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="ast" viewBox="0 0 100 100">
+    <g fill="currentColor">
+      <rect x="42" y="2" width="16" height="96" rx="8"/>
+      <rect x="42" y="2" width="16" height="96" rx="8" transform="rotate(45 50 50)"/>
+      <rect x="42" y="2" width="16" height="96" rx="8" transform="rotate(90 50 50)"/>
+      <rect x="42" y="2" width="16" height="96" rx="8" transform="rotate(135 50 50)"/>
+    </g>
+  </symbol>
+</svg>
+
+<nav id="nav">
+  <a class="logo" href="#inicio">paula.camayo <span class="ast spin"><svg><use href="#ast"/></svg></span></a>
+  <ul>
+    <li><a href="#sobre-mi">Sobre mí</a></li>
+    <li><a href="#proyectos">Proyectos</a></li>
+    <li><a href="#proceso">Proceso</a></li>
+    <li><a href="#herramientas">Herramientas</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+  </ul>
+  <a class="pill solid" href="Hoja-de-vida-Paula-Camayo.pdf" target="_blank" rel="noopener">Hoja de vida <span class="arrow"></span></a>
+</nav>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="inicio">
+  <svg class="wave" viewBox="0 0 1440 500" preserveAspectRatio="none" aria-hidden="true">
+    <path id="wavePath" d="M-40,330 C120,120 260,80 360,220 S560,460 700,300 S900,40 1040,170 S1260,430 1480,210"/>
+  </svg>
+
+  <div class="meta"><span>Portafolio 2026</span><span>Diseño de Medios Interactivos · Universidad Icesi</span><span>Cali · Popayán</span></div>
+
+  <h1 class="display hero-line top" data-split data-drift="-0.25" aria-label="Portafolio">Portafolio</h1>
+
+  <div class="hero-mid">
+    <div class="hello">
+      <span class="tag">Hola,</span>
+      <span class="tag">mucho gusto,</span>
+      <span class="tag">soy</span>
+      <span class="name serif" data-split>Paula</span>
+    </div>
+
+    <div class="portrait" data-cursor="Hola!">
+      <svg class="ring" viewBox="0 0 200 200" aria-hidden="true">
+        <defs><path id="circle" d="M100,100 m-88,0 a88,88 0 1,1 176,0 a88,88 0 1,1 -176,0"/></defs>
+        <text><textPath href="#circle">Diseño gráfico ✱ UX/UI ✱ Motion ✱ Código ✱ Branding ✱</textPath></text>
+      </svg>
+      <div class="photo"></div>
+      <div class="pop"><img src="assets/paula-hero.png" alt="Paula Andrea Camayo Argumero con un celular rosado"></div>
+      <span class="ast badge spin"><svg><use href="#ast"/></svg></span>
+    </div>
+
+    <div class="intro">
+      <p>Estudiante de cuarto semestre de <b>Diseño de Medios Interactivos</b>. Diseño piezas gráficas, experiencias digitales y también las programo.</p>
+      <div class="row">
+        <a class="pill solid" href="#proyectos">Ver proyectos <span class="arrow"></span></a>
+        <a class="pill" href="#contacto">Contacto <span class="arrow"></span></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="display hero-line bottom" data-split data-drift="0.25" aria-hidden="true">Creativo</div>
+</section>
+
+<!-- ============ MARQUEE ============ -->
+<div class="marquee tilt" aria-hidden="true">
+  <div class="track" id="track">
+    <div class="item"><span>UI/UX</span><span class="ast"><svg><use href="#ast"/></svg></span><span>Diseño gráfico</span><span class="ast"><svg><use href="#ast"/></svg></span><span>Motion</span><span class="ast"><svg><use href="#ast"/></svg></span><span>Investigación</span><span class="ast"><svg><use href="#ast"/></svg></span><span>Front-end</span><span class="ast"><svg><use href="#ast"/></svg></span><span>Branding</span><span class="ast"><svg><use href="#ast"/></svg></span></div>
+  </div>
+</div>
+
+<!-- ============ ABOUT ============ -->
+<section class="about" id="sobre-mi">
+  <div class="dark">
+    <p class="eyebrow" style="color:var(--rosa)" data-reveal>Sobre mí</p>
+    <h2 class="display title split-in" data-split data-observe>Hola, soy Paula <span class="ast spin"><svg><use href="#ast"/></svg></span></h2>
+    <div class="text" data-reveal>
+      <p>Tengo 19 años y estudio <b>Diseño de Medios Interactivos en la Universidad Icesi</b>. Me muevo entre Figma, Illustrator y Photoshop, y también entre el código: me gusta que lo que diseño funcione de verdad.</p>
+      <p>Lidero con naturalidad, trabajo bien con cualquier persona y no me altero bajo presión. Cada proyecto lo termino mejor de lo que lo empecé. Conozco la identidad de marca de Icesi y quiero ponerla en práctica en sus piezas, páginas y actividades.</p>
+    </div>
+    <div class="stats" data-reveal>
+      <div class="stat"><b data-count="4" data-suffix=".º">0</b><span>semestre</span></div>
+      <div class="stat"><b data-count="4.0" data-decimals="1">0</b><span>promedio</span></div>
+      <div class="stat"><b>B2</b><span>inglés</span></div>
+      <div class="stat"><b data-count="8" data-suffix="+">0</b><span>proyectos</span></div>
+    </div>
+  </div>
+  <div class="pic" data-cursor="✱">
+    <span class="ast big-ast spin"><svg><use href="#ast"/></svg></span>
+    <img src="assets/paula-sobre-mi.png" alt="Paula Andrea Camayo Argumero sonriendo con traje y corbata">
+    <div class="note"><b>Dato</b>Pasa el cursor: el blanco y negro también tiene color.</div>
+  </div>
+</section>
+
+<!-- ============ PROJECTS ============ -->
+<section class="projects" id="proyectos">
+  <div class="ghost" data-drift-x="-0.35" aria-hidden="true">Proyectos ✱ Proyectos</div>
+  <div class="wrap">
+    <div class="proj-head">
+      <div>
+        <p class="eyebrow" data-reveal>Trabajo seleccionado</p>
+        <h2 class="display split-in" data-split data-observe>Proyectos</h2>
+      </div>
+      <div class="filters" role="group" aria-label="Filtrar proyectos">
+        <button class="on" data-filter="todos">Todos</button>
+        <button data-filter="ux">Investigación UX</button>
+        <button data-filter="ui">UI / App</button>
+        <button data-filter="web">Web y código</button>
+      </div>
+    </div>
+
+    <div class="grid" id="grid">
+      <a class="card wide" data-cat="ui web" data-cursor="Ver" href="https://www.behance.net/gallery/246980251/Givy-Website" target="_blank" rel="noopener">
+        <span class="num">01</span>
+        <div class="thumb"><img src="assets/proyectos/givy.png" alt="Portada del proyecto Givy" loading="lazy">
+          <div class="over"><span>UI/UX</span><span>Web</span><span>Figma</span></div></div>
+        <div class="info"><div><h3>Givy</h3><p>Red social para intercambiar habilidades: muestras tu talento en video y haces match para aprender.</p></div><span class="go">→</span></div>
+      </a>
+      <a class="card" data-cat="ui" data-cursor="Ver" href="https://www.behance.net/gallery/246979701/ZAYA-Hosting-App" target="_blank" rel="noopener">
+        <span class="num">02</span>
+        <div class="thumb"><img src="assets/proyectos/zaya.png" alt="Portada del proyecto ZAYA" loading="lazy">
+          <div class="over"><span>App móvil</span><span>UI design</span><span>Prototipo</span></div></div>
+        <div class="info"><div><h3>ZAYA Hosting App</h3><p>App de alojamientos con filtros a tu medida y atractivos turísticos cercanos.</p></div><span class="go">→</span></div>
+      </a>
+      <a class="card" data-cat="ux" data-cursor="Ver" href="https://www.behance.net/gallery/250915373/UX-The-generation-Gap-On-Screen" target="_blank" rel="noopener">
+        <span class="num">03</span>
+        <div class="thumb"><img src="assets/proyectos/generation-gap.png" alt="Portada del proyecto Generation Gap on Screen" loading="lazy">
+          <div class="over"><span>Investigación</span><span>Rediseño</span><span>Figma</span></div></div>
+        <div class="info"><div><h3>The Generation Gap on Screen</h3><p>¿Facebook es igual de claro para todos? Grupos focales, indagación contextual y rediseño.</p></div><span class="go">→</span></div>
+      </a>
+      <a class="card" data-cat="ux" data-cursor="Ver" href="https://www.behance.net/gallery/256808027/UX-case-study-Single-Mothers" target="_blank" rel="noopener">
+        <span class="num">04</span>
+        <div class="thumb"><img src="assets/proyectos/single-mothers.jpg" alt="Portada del caso de estudio Single Mothers" loading="lazy">
+          <div class="over"><span>UX research</span><span>Case study</span><span>Equipo</span></div></div>
+        <div class="info"><div><h3>Single Mothers</h3><p>Caso de estudio en equipo sobre madres cabeza de hogar con hijos en edad escolar.</p></div><span class="go">→</span></div>
+      </a>
+      <a class="card" data-cat="ui" data-cursor="Ver" href="https://www.behance.net/gallery/250822377/PA-DONDE" target="_blank" rel="noopener">
+        <span class="num">05</span>
+        <div class="thumb"><img src="assets/proyectos/pa-donde.png" alt="Portada del proyecto PA' DONDE" loading="lazy">
+          <div class="over"><span>Mobile</span><span>Tablet</span><span>Desktop</span></div></div>
+        <div class="info"><div><h3>PA' DONDE</h3><p>App para descubrir planes cerca: gastronomía, entretenimiento y rachas que premian salir.</p></div><span class="go">→</span></div>
+      </a>
+      <a class="card" data-cat="web" data-cursor="Abrir" href="proyectos/acompana/index.html" target="_blank" rel="noopener">
+        <span class="num">06</span>
+        <div class="thumb"><img src="proyectos/acompana/images/problem-poster.jpg" alt="Vista del blog Acompaña" loading="lazy">
+          <div class="over"><span>HTML</span><span>CSS</span><span>Diseño web</span></div></div>
+        <div class="info"><div><h3>Acompaña</h3><p>Blog interactivo en HTML y CSS para una propuesta de acompañamiento de regreso a casa.</p></div><span class="go">→</span></div>
+      </a>
+      <a class="card code wide" data-cat="web" data-cursor="Código" href="https://github.com/Paul444555" target="_blank" rel="noopener">
+        <span class="num">07</span>
+        <div class="thumb"><pre><i>const</i> paula = {
+  front: [<i>"Next.js"</i>, <i>"React"</i>, <i>"Tailwind"</i>],
+  back:  [<i>"NestJS"</i>, <i>"Node"</i>, <i>"PostgreSQL"</i>],
+  estado: <i>"siempre aprendiendo"</i>
+};</pre></div>
+        <div class="info"><div><h3>Speek y más código</h3><p>Proyectos full stack en GitHub: login, componentes de interfaz y APIs con NestJS.</p></div><span class="go">→</span></div>
+      </a>
+    </div>
+
+    <div class="more" data-reveal><a class="pill solid" href="https://www.behance.net/Paula_Andrea_CamayoA" target="_blank" rel="noopener">Ver todo en Behance <span class="arrow"></span></a></div>
+  </div>
+</section>
+
+<!-- ============ PROCESS ============ -->
+<section class="process" id="proceso">
+  <div class="wrap">
+    <p class="eyebrow" data-reveal>Cómo trabajo</p>
+    <h2 class="display split-in" data-split data-observe>De la idea a la pantalla</h2>
+    <div class="steps">
+      <div class="step" data-reveal><span class="n">01</span><div><h3>Investigo</h3><p>Entrevistas, grupos focales y observación para entender a quién le diseño.</p></div></div>
+      <div class="step" data-reveal><span class="n">02</span><div><h3>Diseño</h3><p>Identidad, piezas gráficas e interfaces en Illustrator, Photoshop y Figma.</p></div></div>
+      <div class="step" data-reveal><span class="n">03</span><div><h3>Prototipo y animo</h3><p>Prototipos navegables y motion en After Effects para contar la idea.</p></div></div>
+      <div class="step" data-reveal><span class="n">04</span><div><h3>Construyo</h3><p>Lo llevo a código con HTML, CSS, JavaScript y React para que funcione de verdad.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TOOLS ============ -->
+<section class="tools" id="herramientas">
+  <div class="wrap cols">
+    <div>
+      <p class="eyebrow" data-reveal>Herramientas</p>
+      <h2 class="display split-in" data-split data-observe>Mi caja de colores</h2>
+      <p class="lead" data-reveal>Pasa el cursor sobre las herramientas: se acercan a ti.</p>
+    </div>
+    <div>
+      <div class="group" data-reveal><h3>Diseño gráfico y UI</h3><div class="chips"><span class="chip">Figma</span><span class="chip">Illustrator</span><span class="chip">Photoshop</span></div></div>
+      <div class="group" data-reveal><h3>Video y motion</h3><div class="chips"><span class="chip">After Effects</span><span class="chip">CapCut</span></div></div>
+      <div class="group" data-reveal><h3>Front-end</h3><div class="chips"><span class="chip">HTML</span><span class="chip">CSS</span><span class="chip">JavaScript</span><span class="chip">TypeScript</span><span class="chip">React</span><span class="chip">Next.js</span><span class="chip">Tailwind</span><span class="chip">Zustand</span></div></div>
+      <div class="group" data-reveal><h3>Back-end y datos</h3><div class="chips"><span class="chip">Node.js</span><span class="chip">NestJS</span><span class="chip">Java</span><span class="chip">Python</span><span class="chip">PostgreSQL</span><span class="chip">MySQL</span><span class="chip">Supabase</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section class="contact" id="contacto">
+  <figure class="polaroid p1" data-cursor="Hola!"><img src="assets/paula-polaroid-1.jpg" alt="Paula con traje negro y celular rosado" loading="lazy"><figcaption>lista para crear</figcaption></figure>
+  <figure class="polaroid p2" data-cursor="✱"><img src="assets/paula-polaroid-2.jpg" alt="Selfie divertida de Paula" loading="lazy"><figcaption>¡escríbeme!</figcaption></figure>
+  <p class="eyebrow" data-reveal>¿Trabajamos juntos?</p>
+  <h2 class="display big split-in" data-split data-observe>Hablemos</h2>
+  <button class="mail" id="mail" data-cursor="Copiar" type="button">paulacamayo4@gmail.com <small id="mailTip">Copiar</small></button>
+  <div class="socials" data-reveal>
+    <a class="pill" href="https://www.behance.net/Paula_Andrea_CamayoA" target="_blank" rel="noopener">Behance <span class="arrow"></span></a>
+    <a class="pill" href="https://www.linkedin.com/in/paula-andrea-camayo-argumero-2b9b4a44b/" target="_blank" rel="noopener">LinkedIn <span class="arrow"></span></a>
+    <a class="pill" href="https://github.com/Paul444555" target="_blank" rel="noopener">GitHub <span class="arrow"></span></a>
+    <a class="pill" href="Hoja-de-vida-Paula-Camayo.pdf" target="_blank" rel="noopener">Hoja de vida <span class="arrow"></span></a>
+  </div>
+  <footer><span>Diseñado y programado por Paula Andrea Camayo Argumero</span><span>Universidad Icesi · 2026</span></footer>
+</section>
+
+<script>
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+  // Split text into letter spans
+  document.querySelectorAll('[data-split]').forEach(el => {
+    let i = 0;
+    const walk = node => {
+      [...node.childNodes].forEach(n => {
+        if (n.nodeType === 3) {
+          const frag = document.createDocumentFragment();
+          [...n.textContent].forEach(c => {
+            if (c === ' ') { frag.append(' '); return; }
+            const s = document.createElement('span');
+            s.className = 'ch'; s.textContent = c; s.style.setProperty('--i', i++);
+            frag.append(s);
+          });
+          n.replaceWith(frag);
+        } else if (n.nodeType === 1 && !n.classList.contains('ast')) walk(n);
+      });
+    };
+    walk(el);
+  });
+
+  // Reveal on scroll
+  const io = new IntersectionObserver(entries => entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+  }), { threshold: .18 });
+  document.querySelectorAll('[data-reveal], [data-observe]').forEach(el => io.observe(el));
+
+  // Count-up stats
+  const counter = new IntersectionObserver(entries => entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    const el = e.target, end = parseFloat(el.dataset.count), dec = +(el.dataset.decimals || 0), suf = el.dataset.suffix || '';
+    const t0 = performance.now(), dur = reduce ? 0 : 1200;
+    const tick = t => { const p = dur ? Math.min((t - t0) / dur, 1) : 1; const v = end * (1 - Math.pow(1 - p, 3));
+      el.textContent = v.toFixed(dec) + suf; if (p < 1) requestAnimationFrame(tick); };
+    requestAnimationFrame(tick); counter.unobserve(el);
+  }), { threshold: .6 });
+  document.querySelectorAll('[data-count]').forEach(el => counter.observe(el));
+
+  // Nav background on scroll
+  const nav = document.getElementById('nav');
+
+  // Scroll-driven motion: drifting words, wave drawing, marquee speed
+  const drifts = [...document.querySelectorAll('[data-drift]')];
+  const driftX = [...document.querySelectorAll('[data-drift-x]')];
+  const wave = document.getElementById('wavePath');
+  const waveLen = wave.getTotalLength();
+  wave.style.strokeDasharray = waveLen;
+  const track = document.getElementById('track');
+  const item = track.firstElementChild;
+  for (let k = 0; k < 3; k++) track.append(item.cloneNode(true));
+  let mx = 0, lastY = scrollY, velocity = 0;
+
+  const loop = () => {
+    const y = scrollY;
+    velocity += ((y - lastY) - velocity) * .12; lastY = y;
+    nav.classList.toggle('scrolled', y > 40);
+    if (!reduce) {
+      drifts.forEach(el => el.style.transform = `translateX(${y * parseFloat(el.dataset.drift)}px)`);
+      driftX.forEach(el => { const r = el.parentElement.getBoundingClientRect();
+        el.style.transform = `translateX(${(r.top) * parseFloat(el.dataset.driftX)}px)`; });
+      const p = Math.min(y / (innerHeight * .9), 1);
+      wave.style.strokeDashoffset = waveLen * (0.45 - 0.45 * p) ;
+      const w = item.offsetWidth;
+      mx -= 1.2 + Math.abs(velocity) * .35;
+      if (-mx >= w) mx += w;
+      track.style.transform = `translateX(${mx}px) skewX(${Math.max(-12, Math.min(12, -velocity * .4))}deg)`;
+    } else { wave.style.strokeDashoffset = 0; }
+    requestAnimationFrame(loop);
+  };
+  requestAnimationFrame(loop);
+
+  // Custom cursor
+  if (fine && !reduce) {
+    document.body.classList.add('has-cursor');
+    const dot = document.querySelector('.cursor'), ring = document.querySelector('.cursor-ring'), label = ring.querySelector('span');
+    let x = innerWidth / 2, y = innerHeight / 2, rx = x, ry = y;
+    addEventListener('mousemove', e => { x = e.clientX; y = e.clientY; dot.style.transform = `translate(${x}px, ${y}px) translate(-50%,-50%)`; });
+    const follow = () => { rx += (x - rx) * .18; ry += (y - ry) * .18; ring.style.transform = `translate(${rx}px, ${ry}px) translate(-50%,-50%)`; requestAnimationFrame(follow); };
+    follow();
+    document.addEventListener('mouseover', e => {
+      const t = e.target.closest('[data-cursor], a, button, .chip, .ch, .tag, .step');
+      document.body.classList.toggle('hovering', !!t);
+      const lab = t && t.closest('[data-cursor]');
+      document.body.classList.toggle('labeled', !!lab);
+      if (lab) label.textContent = lab.dataset.cursor;
+    });
+
+    // 3D tilt on project cards
+    document.querySelectorAll('.card').forEach(card => {
+      card.addEventListener('mousemove', e => {
+        const r = card.getBoundingClientRect(), px = (e.clientX - r.left) / r.width - .5, py = (e.clientY - r.top) / r.height - .5;
+        card.style.transform = `rotateY(${px * 10}deg) rotateX(${-py * 10}deg) translateY(-6px)`;
+      });
+      card.addEventListener('mouseleave', () => card.style.transform = '');
+    });
+
+    // Magnetic tool chips
+    document.querySelectorAll('.chip, .pill').forEach(el => {
+      el.addEventListener('mousemove', e => {
+        const r = el.getBoundingClientRect();
+        el.style.transform = `translate(${(e.clientX - r.left - r.width / 2) * .3}px, ${(e.clientY - r.top - r.height / 2) * .4}px)`;
+      });
+      el.addEventListener('mouseleave', () => el.style.transform = '');
+    });
+  }
+
+  // Project filters
+  const buttons = document.querySelectorAll('.filters button');
+  buttons.forEach(b => b.addEventListener('click', () => {
+    buttons.forEach(x => x.classList.toggle('on', x === b));
+    const f = b.dataset.filter;
+    document.getElementById('grid').classList.toggle('filtered', f !== 'todos');
+    document.querySelectorAll('#grid .card').forEach(c => c.classList.toggle('hide', f !== 'todos' && !c.dataset.cat.split(' ').includes(f)));
+  }));
+
+  // Copy email
+  const mail = document.getElementById('mail'), tip = document.getElementById('mailTip');
+  mail.addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText('paulacamayo4@gmail.com'); tip.textContent = '¡Copiado!'; }
+    catch { location.href = 'mailto:paulacamayo4@gmail.com'; }
+    setTimeout(() => tip.textContent = 'Copiar', 1800);
+  });
+})();
+</script>
+</body>
+</html>
