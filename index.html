@@ -276,6 +276,62 @@
     *, *::before, *::after { animation: none !important; transition: none !important; }
     [data-reveal], .split-in .ch { opacity: 1 !important; transform: none !important; }
   }
+  /* ---------- Print / PDF ----------
+     Chrome evaluates media queries against a narrow default page when printing,
+     so the desktop layout is forced here explicitly. */
+  @media print {
+    @page { size: 1440px 1100px; margin: 0; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    html { scroll-behavior: auto; }
+    .cursor, .cursor-ring, nav { display: none !important; }
+    [data-reveal], .split-in .ch { opacity: 1 !important; transform: none !important; }
+    .spin, .portrait .ring { animation: none !important; }
+    .card, .portrait .photo, .polaroid, .about .pic .note { box-shadow: none !important; }
+    .card { transform: none !important; border: 1px solid rgba(13,3,3,.08); }
+    .portrait .pop img { filter: none !important; }
+
+    section, .about { break-before: page; }
+    .hero { break-before: auto; min-height: 1100px; padding: 46px 72px 0; justify-content: flex-start; }
+    .hero .meta { justify-content: space-between !important; text-align: left !important; }
+    .hero-line { font-size: 150px !important; transform: none !important; }
+    .hello { flex-direction: row; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: 10px; }
+    .tag { font-size: 24px; }
+    .hello .name { flex-basis: 100%; font-size: 104px; }
+    .portrait { --w: 290px; margin-top: 46px; }
+    .intro { font-size: 18px; }
+    .intro .row { display: none; }
+    .wave { height: 16% !important; bottom: 2% !important; top: auto !important; stroke-dashoffset: 0 !important; }
+    .wave path { stroke-dashoffset: 0 !important; }
+    .marquee { display: none; }
+
+    .about { grid-template-columns: 1.05fr .95fr !important; min-height: 1100px; }
+    .about .dark { padding: 110px 72px; }
+    .about .title { font-size: 130px; }
+    .stats { grid-template-columns: repeat(4, 1fr) !important; }
+
+    .projects { padding: 60px 72px 40px; }
+    .ghost { transform: none !important; }
+    .grid { grid-template-columns: repeat(3, 1fr) !important; gap: 18px; }
+    .card.wide { grid-column: span 2 !important; }
+    .card.wide .thumb { aspect-ratio: 1650 / 632 !important; }
+    .card { break-inside: avoid; }
+    .card .thumb .over, .filters, .more { display: none !important; }
+
+    .process { break-before: auto !important; min-height: 0; padding: 50px 72px 60px; }
+    .process h2 { font-size: 90px; max-width: none; }
+    .steps { margin-top: 30px; }
+    .steps { grid-template-columns: repeat(4, 1fr) !important; }
+    .tools { min-height: 1100px; padding: 120px 72px; }
+    .tools .cols { grid-template-columns: .8fr 1.2fr !important; }
+    .tools .lead { display: none; }
+    .tools h2 { font-size: 100px; }
+
+    .contact { min-height: 1100px; padding: 120px 72px 40px; }
+    .polaroid { position: absolute !important; display: block !important; width: 210px !important; margin: 0 !important; }
+    .polaroid.p1 { left: 5% !important; top: 560px !important; bottom: auto !important; }
+    .polaroid.p2 { right: 5% !important; top: 600px !important; bottom: auto !important; }
+    .contact footer { margin-top: 330px; }
+  }
 </style>
 </head>
 <body>
@@ -364,10 +420,10 @@
       <p>Lidero con naturalidad, trabajo bien con cualquier persona y no me altero bajo presión. Cada proyecto lo termino mejor de lo que lo empecé. Conozco la identidad de marca de Icesi y quiero ponerla en práctica en sus piezas, páginas y actividades.</p>
     </div>
     <div class="stats" data-reveal>
-      <div class="stat"><b data-count="4" data-suffix=".º">0</b><span>semestre</span></div>
-      <div class="stat"><b data-count="4.0" data-decimals="1">0</b><span>promedio</span></div>
+      <div class="stat"><b data-count="4" data-suffix=".º">4.º</b><span>semestre</span></div>
+      <div class="stat"><b data-count="4.0" data-decimals="1">4.0</b><span>promedio</span></div>
       <div class="stat"><b>B2</b><span>inglés</span></div>
-      <div class="stat"><b data-count="8" data-suffix="+">0</b><span>proyectos</span></div>
+      <div class="stat"><b data-count="8" data-suffix="+">8+</b><span>proyectos</span></div>
     </div>
   </div>
   <div class="pic" data-cursor="✱">
